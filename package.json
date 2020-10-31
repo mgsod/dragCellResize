@@ -1,6 +1,6 @@
 {
   "name": "drag-cell-resize",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "drag cell resize table col",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,7 +16,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md"
   ],
   "keywords": [
     "drag table cell",
