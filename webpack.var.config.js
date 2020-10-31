@@ -3,8 +3,9 @@
  */
 const baseConfig = require('./webpack.baseconfig');
 const merge = require('webpack-merge').merge;
-module.exports = merge(baseConfig, {
+module.exports = merge(baseConfig,{
     output: {
-        filename:'../dist/index.min.js',
+        filename:'../dist/index.var.js',
+        libraryExport: 'DragCellResize',
     },
 });

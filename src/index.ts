@@ -2,7 +2,7 @@ import {DirectiveBinding} from "vue/types/options";
 
 let tableResizeMap: Map<HTMLElement, DragCellResize> = new Map();
 
-class DragCellResize {
+export class DragCellResize {
     allowResize = false
     table: HTMLElement
     thead: HTMLElement
@@ -59,6 +59,7 @@ class DragCellResize {
             this.table.onmousemove = (e: MouseEvent) => {
                 // 拖拽期间表格的鼠标样式
                 this.table.style.cursor = 'col-resize';
+                this.table.style.userSelect = 'none'
                 this.dragRightLine.style.left = `${e.clientX - containerBoundingLeft}px`;
             }
             this.table.onmouseup = (e: MouseEvent) => {
@@ -71,20 +72,20 @@ class DragCellResize {
 
                 // 偏移量
                 let offsetX = e.clientX - start;
+                this.offsetX = offsetX
                 // 如果用custom为true,单元格宽度交由用户处理
                 if (this.custom && this.callback) {
-                    this.offsetX = offsetX
                     this.callback(e, this)
                 } else {
                     // 设置宽度
-                    cell.style.width = cellOffsetWidth + offsetX + 'px';
+                    cell.style.minWidth = cellOffsetWidth + offsetX + 'px';
                     // 如果有回调则执行
-                    this.callback && this.callback();
+                    this.callback && this.callback(e, this);
                 }
 
 
             }
-        }
+        };
         return this
     }
 
@@ -124,6 +125,7 @@ function init(el: HTMLElement, binding: DirectiveBinding) {
     new DragCellResize(el, callback, custom)
 }
 
+
 export default {
     install: function (Vue: { directive: any; }) {
         Vue.directive('drag-cell-resize', {
@@ -131,7 +133,4 @@ export default {
             componentUpdated: init
         })
     }
-}
-export {
-    DragCellResize
 }
