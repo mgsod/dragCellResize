@@ -39,6 +39,15 @@ Vue Demo[Vue Demo](https://mgsod.github.io/front-end/dragCellResize.html#demo "V
     <table v-drag-cell-resize>...</table>
 </template>
 ```
+指令不仅仅可以绑定在table中,只要其包含`table`表格都可以绑定,例如:
+```vue
+<template>
+    <div v-drag-cell-resize>
+      <table>...</table>
+    </div>
+</template>
+```
+
  2.直接调用DragCellResize类
  ```vue
  <template>
@@ -85,3 +94,10 @@ new DragCellResize(el,callbakc,isCustom)
 | isCustom |  是否自定义处理拖拽操作，如果为true，拖拽的后不会设置列宽，交由callback处理  |   否 |
 
 Demo[Demo](https://mgsod.github.io/front-end/dragCellResize.html#demo "Vue Demo")
+
+
+### 注意事项:
+
+由于`td`会动态分配整个`table`的宽度,进而导致实际设置的`width`大小不是`td`的真实宽度.就会导致拖拽的宽度不是实际得到的大小.例如,明明拖拽后总宽度是100px,实际上表现的会超过100px.无法对齐到虚线处
+
+所以需要对表格的`th`,`td`增加css样式.设置其`box-sizing`为`border-box`
