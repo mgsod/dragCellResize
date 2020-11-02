@@ -12,15 +12,19 @@
 
 ### cdn
 
-umd版本（包含指令和DragCellResize类）:`<script src="https://unpkg.com/drag-cell-resize/dist/index.min.js"></script>`
+umd版本（包含指令和DragCellResize类）:
 
-var版本（仅包含DragCellResize类）：`<script src="https://unpkg.com/drag-cell-resize/dist/index.var.js"></script>`
+`<script src="https://unpkg.com/drag-cell-resize/dist/index.min.js"></script>`
+
+var版本（仅包含DragCellResize类）：
+
+`<script src="https://unpkg.com/drag-cell-resize/dist/index.var.js"></script>`
 
 
 
 ### 使用方式
 
-* ####在Vue中使用
+* #### 在Vue中使用
 
 Vue Demo[Vue Demo](https://mgsod.github.io/front-end/dragCellResize.html#demo "Vue Demo")
 
@@ -68,8 +72,8 @@ Vue Demo[Vue Demo](https://mgsod.github.io/front-end/dragCellResize.html#demo "V
 
 指令本质上就是在bind时实例化了`DragCellResize`类.
 
-> 注：在使用v-drag-cell-resize时，会在bind和update钩子上尝试获取表格的dom对象及绑定事件，
->虽然用到了update钩子，但是DragCellResize只会被实例化一次，不用担心事件重复绑定和重复实例化
+> 注：在使用v-drag-cell-resize的时候,由于某些情况下thead或者整个table都还未被渲染(例如使用了v-if),指令无法在`bind`或`insert`钩子上获取到dom对象.所以如果在`bind`阶段未找到dom的话,指令会尝试在update钩子上获取表格的dom对象及绑定事件.
+>尽管用到了update钩子，会多次触发指令绑定,但是外部用了`Map`来缓存`dom`和`DragCellResize`的关系,.所以`DragCellResize`一旦被实例化后不会便不会再重复实例化和绑定事件.
 
 构造参数
 new DragCellResize(el,callbakc,isCustom)
