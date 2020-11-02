@@ -26,7 +26,7 @@ var版本（仅包含DragCellResize类）：
 
 * #### 在Vue中使用
 
-Vue Demo[Vue Demo](https://mgsod.github.io/front-end/dragCellResize.html#demo "Vue Demo")
+[Vue Demo](https://mgsod.github.io/front-end/dragCellResize.html#demo "Vue Demo")
 
  1.作为指令使用
  ```js
@@ -93,7 +93,7 @@ new DragCellResize(el,callbakc,isCustom)
 | callback |  完成拖拽后的回调函数/自定义处理拖拽。可在拖拽后执行某些操作  |  否（如果isCustom为true,callback必传）  |
 | isCustom |  是否自定义处理拖拽操作，如果为true，拖拽的后不会设置列宽，交由callback处理  |   否 |
 
-Demo[Demo](https://mgsod.github.io/front-end/dragCellResize.html#demo "Vue Demo")
+[Demo](https://mgsod.github.io/front-end/dragCellResize.html#demo "Vue Demo")
 
 
 ### 注意事项:
