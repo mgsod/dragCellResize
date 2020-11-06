@@ -6,19 +6,25 @@
 
 ### npm & yarn
 
-`npm install drag-cell-resize`
+```
+npm install drag-cell-resize
 
-`yarn add drag-cell-resize`
+yarn add drag-cell-resize
+```
 
 ### cdn
 
 umd版本（包含指令和DragCellResize类）:
 
-`<script src="https://unpkg.com/drag-cell-resize/dist/index.min.js"></script>`
+```
+<script src="https://unpkg.com/drag-cell-resize/dist/index.min.js"></script>
+```
 
 var版本（仅包含DragCellResize类）：
 
-`<script src="https://unpkg.com/drag-cell-resize/dist/index.var.js"></script>`
+```
+<script src="https://unpkg.com/drag-cell-resize/dist/index.var.js"></script>
+```
 
 
 
