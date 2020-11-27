@@ -1,6 +1,6 @@
 {
   "name": "drag-cell-resize",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "drag cell resize table col",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,9 +15,7 @@
     "build-doc": "vuepress build docs"
   },
   "files": [
-    "dist",
-    "src",
-    "README.md"
+    "dist"
   ],
   "keywords": [
     "drag table cell",
@@ -27,16 +25,16 @@
   "author": "mgso",
   "license": "ISC",
   "dependencies": {
+    "@types/vue": "^2.0.0"
+  },
+  "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",
     "@babel/preset-env": "^7.11.5",
-    "@types/vue": "^2.0.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.1.0",
     "babel-preset-es2015": "^6.24.1",
-    "webpack": "^4.16.0"
-  },
-  "devDependencies": {
+    "webpack": "^4.16.0",
     "typescript": "^4.0.3",
     "uglifyjs-webpack-plugin": "^1.2.7",
     "vuepress": "^1.7.1",

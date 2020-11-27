@@ -2,26 +2,30 @@ import {DirectiveBinding} from "vue/types/options";
 
 let tableResizeMap: Map<HTMLElement, DragCellResize> = new Map();
 
-export class DragCellResize {
+class DragCellResize {
     allowResize = false
     table: HTMLElement
     thead: HTMLElement
     dragLeftLine: HTMLElement
     dragRightLine: HTMLElement
-    callback: Function | undefined
+    callback: Function
     custom: boolean
     offsetX: number = 0
+    resizedWidth: number = 0
     cell: HTMLElement
+    cellIndex:number = -1
 
-    constructor(table: HTMLElement, callback?: Function | undefined, custom?: boolean) {
+    constructor(table: HTMLElement, callback?: Function, custom?: boolean) {
         this.table = table;
         this.thead = (table.querySelector('thead') as HTMLElement);
         if (this.thead) {
             tableResizeMap.set(table, this)
-            this.bindTheadEvent().appendDragLine()
-            this.callback = callback
+            this.bindTheadEvent()
+                .appendDragLine();
+            if (callback) this.callback = callback;
             this.custom = !!custom
         }
+
 
     }
 
@@ -59,7 +63,6 @@ export class DragCellResize {
             this.table.onmousemove = (e: MouseEvent) => {
                 // 拖拽期间表格的鼠标样式
                 this.table.style.cursor = 'col-resize';
-                this.table.style.userSelect = 'none'
                 this.dragRightLine.style.left = `${e.clientX - containerBoundingLeft}px`;
             }
             this.table.onmouseup = (e: MouseEvent) => {
@@ -73,24 +76,27 @@ export class DragCellResize {
                 // 偏移量
                 let offsetX = e.clientX - start;
                 this.offsetX = offsetX
+                this.resizedWidth = cellOffsetWidth + offsetX;
+                let list = this.cell.parentElement!.childNodes
+                this.cellIndex = ([].slice.call(list) as HTMLElement[]).indexOf(this.cell)
                 // 如果用custom为true,单元格宽度交由用户处理
                 if (this.custom && this.callback) {
                     this.callback(e, this)
                 } else {
                     // 设置宽度
-                    cell.style.minWidth = cellOffsetWidth + offsetX + 'px';
+                    cell.style.width = cellOffsetWidth + offsetX + 'px';
                     // 如果有回调则执行
                     this.callback && this.callback(e, this);
                 }
 
 
             }
-        };
+        }
         return this
     }
 
     // 添加辅助线
-    appendDragLine(): DragCellResize {
+    appendDragLine(): void {
         let lineStyle = `  
                     position: absolute;
                     top: 0;
@@ -100,19 +106,31 @@ export class DragCellResize {
                     width: 2px;
                     z-index:9999;
                     border-left: 1px dotted #000;`
-        this.dragLeftLine = document.createElement('div');
-        this.dragRightLine = document.createElement('div');
-        this.dragLeftLine.style.cssText = this.dragRightLine.style.cssText = lineStyle
+        let dragLine = this.table.querySelectorAll('.dragLine');
+        if (dragLine.length > 0) {
+            this.dragLeftLine = <HTMLElement>dragLine[0]
+            this.dragRightLine = <HTMLElement>dragLine[1]
+        } else {
+            let dragLine = document.createElement('div');
+            dragLine.setAttribute('class', 'dragLine')
+            dragLine.style.cssText = lineStyle;
+            this.dragLeftLine = dragLine;
+            this.dragRightLine = <HTMLElement>dragLine.cloneNode(true);
+            this.table.appendChild(this.dragLeftLine)
+            this.table.appendChild(this.dragRightLine);
+        }
         this.table.style.position = 'relative';
-        this.table.appendChild(this.dragLeftLine)
-        this.table.appendChild(this.dragRightLine);
-        return this
     }
 
 }
 
 function init(el: HTMLElement, binding: DirectiveBinding) {
-    if (tableResizeMap.get(el)) return
+    let dcr = tableResizeMap.get(el)
+    if (dcr) {
+        tableResizeMap.delete(el);
+        // @ts-ignore 释放对象
+        dcr = null;
+    }
     // 传入指令的值 该值为一个回调函数
     let {value: callback, modifiers} = binding;
     let custom = modifiers?.custom;
@@ -125,7 +143,6 @@ function init(el: HTMLElement, binding: DirectiveBinding) {
     new DragCellResize(el, callback, custom)
 }
 
-
 export default {
     install: function (Vue: { directive: any; }) {
         Vue.directive('drag-cell-resize', {
@@ -133,4 +150,7 @@ export default {
             componentUpdated: init
         })
     }
+}
+export {
+    DragCellResize
 }

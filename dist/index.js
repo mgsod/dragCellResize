@@ -3,12 +3,16 @@ var DragCellResize = /** @class */ (function () {
     function DragCellResize(table, callback, custom) {
         this.allowResize = false;
         this.offsetX = 0;
+        this.resizedWidth = 0;
+        this.cellIndex = -1;
         this.table = table;
         this.thead = table.querySelector('thead');
         if (this.thead) {
             tableResizeMap.set(table, this);
-            this.bindTheadEvent().appendDragLine();
-            this.callback = callback;
+            this.bindTheadEvent()
+                .appendDragLine();
+            if (callback)
+                this.callback = callback;
             this.custom = !!custom;
         }
     }
@@ -48,7 +52,6 @@ var DragCellResize = /** @class */ (function () {
             _this.table.onmousemove = function (e) {
                 // 拖拽期间表格的鼠标样式
                 _this.table.style.cursor = 'col-resize';
-                _this.table.style.userSelect = 'none';
                 _this.dragRightLine.style.left = e.clientX - containerBoundingLeft + "px";
             };
             _this.table.onmouseup = function (e) {
@@ -61,13 +64,16 @@ var DragCellResize = /** @class */ (function () {
                 // 偏移量
                 var offsetX = e.clientX - start;
                 _this.offsetX = offsetX;
+                _this.resizedWidth = cellOffsetWidth + offsetX;
+                var list = _this.cell.parentElement.childNodes;
+                _this.cellIndex = [].slice.call(list).indexOf(_this.cell);
                 // 如果用custom为true,单元格宽度交由用户处理
                 if (_this.custom && _this.callback) {
                     _this.callback(e, _this);
                 }
                 else {
                     // 设置宽度
-                    cell.style.minWidth = cellOffsetWidth + offsetX + 'px';
+                    cell.style.width = cellOffsetWidth + offsetX + 'px';
                     // 如果有回调则执行
                     _this.callback && _this.callback(e, _this);
                 }
@@ -78,20 +84,31 @@ var DragCellResize = /** @class */ (function () {
     // 添加辅助线
     DragCellResize.prototype.appendDragLine = function () {
         var lineStyle = "  \n                    position: absolute;\n                    top: 0;\n                    bottom: 0;\n                    height: 100%;\n                    display:none;\n                    width: 2px;\n                    z-index:9999;\n                    border-left: 1px dotted #000;";
-        this.dragLeftLine = document.createElement('div');
-        this.dragRightLine = document.createElement('div');
-        this.dragLeftLine.style.cssText = this.dragRightLine.style.cssText = lineStyle;
+        var dragLine = this.table.querySelectorAll('.dragLine');
+        if (dragLine.length > 0) {
+            this.dragLeftLine = dragLine[0];
+            this.dragRightLine = dragLine[1];
+        }
+        else {
+            var dragLine_1 = document.createElement('div');
+            dragLine_1.setAttribute('class', 'dragLine');
+            dragLine_1.style.cssText = lineStyle;
+            this.dragLeftLine = dragLine_1;
+            this.dragRightLine = dragLine_1.cloneNode(true);
+            this.table.appendChild(this.dragLeftLine);
+            this.table.appendChild(this.dragRightLine);
+        }
         this.table.style.position = 'relative';
-        this.table.appendChild(this.dragLeftLine);
-        this.table.appendChild(this.dragRightLine);
-        return this;
     };
     return DragCellResize;
 }());
-export { DragCellResize };
 function init(el, binding) {
-    if (tableResizeMap.get(el))
-        return;
+    var dcr = tableResizeMap.get(el);
+    if (dcr) {
+        tableResizeMap.delete(el);
+        // @ts-ignore 释放对象
+        dcr = null;
+    }
     // 传入指令的值 该值为一个回调函数
     var callback = binding.value, modifiers = binding.modifiers;
     var custom = modifiers === null || modifiers === void 0 ? void 0 : modifiers.custom;
@@ -111,3 +128,4 @@ export default {
         });
     }
 };
+export { DragCellResize };
