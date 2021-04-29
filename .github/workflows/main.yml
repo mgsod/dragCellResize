@@ -35,3 +35,19 @@ jobs:
       - name: Building...
         run: |
           npm run build
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy-to-server
+        uses: AEnterprise/rsync-deploy@v1.0
+        env:
+          DEPLOY_KEY: ${{ secrets.SHHBQP_SSH_KEY }}
+          ARGS: "-e -c -r --delete"
+          SERVER_PORT: ${{ SHHBQP_SSH_PORT }}
+          FOLDER: "./dist"
+          SERVER_IP: ${{ secrets.SHHBQP_SSH_ADDR }}
+          USERNAME: ${{ secrets.SHHBQP_SSH_USR }}
+          SERVER_DESTINATION: ${{ secrets.SHHBQP_SSH_TARGET }}
+      
+    
+
