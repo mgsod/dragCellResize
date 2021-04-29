@@ -43,7 +43,7 @@ jobs:
         env:
           DEPLOY_KEY: ${{ secrets.SHHBQP_SSH_KEY }}
           ARGS: "-e -c -r --delete"
-          SERVER_PORT: ${{ SHHBQP_SSH_PORT }}
+          SERVER_PORT: ${{ secrets.SHHBQP_SSH_PORT }}
           FOLDER: "./dist"
           SERVER_IP: ${{ secrets.SHHBQP_SSH_ADDR }}
           USERNAME: ${{ secrets.SHHBQP_SSH_USR }}
